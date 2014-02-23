@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">BookList</string>
+    <string name="action_settings">設定</string>
+    <string name="title_activity_detail">DetailActivity</string>
+    <string name="title">書籍タイトル</string>
+    <string name="author">著者名</string>
+    <string name="publisher">出版社名</string>
+    <string name="price">定価</string>
+    <string name="caption">商品説明文</string>
+    <string name="sales_date">発売日</string>
+
+</resources>

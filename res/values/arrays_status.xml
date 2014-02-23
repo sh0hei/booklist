@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="StatusSpinnerItems">
+        <item>未所持</item>
+        <item>借入中</item>
+        <item>所持</item>
+        <item>読了</item>
+        <item>貸出中</item>
+        <item>廃棄</item>
+    </string-array>
+
+</resources>
