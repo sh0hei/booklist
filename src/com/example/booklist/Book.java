@@ -17,6 +17,7 @@ public class Book implements Serializable {
 
 	public static final String TABLE_NAME = "books";
 	
+	// todo
 	public static final String COLUMN_ID = "_id";
 	public static final String COLUMN_TITLE = "title";
 	public static final String COLUMN_TITLE_KANA = "title_kana";
