@@ -26,6 +26,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		db.beginTransaction();
 		
 		try {
+			/*
 			StringBuilder createSql = new StringBuilder();
 			createSql.append("CREATE TABLE " + Book.TABLE_NAME + " (");
 			createSql.append(Book.COLUMN_ID + " integer primary key autoincrement not null,");
@@ -50,8 +51,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 			createSql.append(Book.COLUMN_ID + "");
 			createSql.append(Book.COLUMN_ID + "");
 			createSql.append(")");
+			
 
 			db.execSQL(createSql.toString());
+			*/
 		} finally {
 			db.endTransaction();
 		}
