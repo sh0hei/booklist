@@ -48,8 +48,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 			createSql.append(Book.COLUMN_SMALL_IMAGE_URL + " text,");
 			createSql.append(Book.COLUMN_MEDIUM_IMAGE_URL + " text,");
 			createSql.append(Book.COLUMN_LARGE_IMAGE_URL + " text");
-			createSql.append(Book.COLUMN_ID + "");
-			createSql.append(Book.COLUMN_ID + "");
+			createSql.append(Book.COLUMN_RATE + " integer");
+			createSql.append(Book.COLUMN_STATUS + " integer");
 			createSql.append(")");
 			
 

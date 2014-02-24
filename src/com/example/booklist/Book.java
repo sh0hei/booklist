@@ -37,6 +37,8 @@ public class Book implements Serializable {
 	public static final String COLUMN_SMALL_IMAGE_URL = "small_image_url";
 	public static final String COLUMN_MEDIUM_IMAGE_URL = "medium_image_url";
 	public static final String COLUMN_LARGE_IMAGE_URL = "large_image_url";
+	public static final String COLUMN_RATE = "rate";
+	public static final String COLUMN_STATUS = "status";
 			
 	// 書籍タイトル
 	private String title;
@@ -92,6 +94,11 @@ public class Book implements Serializable {
 	// 商品画像 (200x200) URL
 	private String largeImageUrl;
 
+	// ユーザ設定レート
+	private Integer rate;
+	
+	// ユーザ設定ステータス
+	private Integer status;
 	
 	public Book(String title, String isbn, String author, String publisherName, Integer itemPrice, String salesDate, String itemCaption) {
 		this.title = title;
@@ -374,6 +381,36 @@ public class Book implements Serializable {
 		this.largeImageUrl = largeImageUrl;
 	}
 
+	/**
+	 * @return the rate
+	 */
+	public Integer getRate() {
+		return rate;
+	}
+	
+	/**
+	 * @param rate
+	 *            the rate to set
+	 */
+	public void setRate(Integer rate) {
+		this.rate = rate;
+	}
+	
+	/**
+	 * @return the status
+	 */
+	public Integer getStatus() {
+		return status;
+	}
+	
+	/**
+	 * @param status
+	 *            the status to set
+	 */
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+	
 	@Override
 	public String toString() {
 		return title;
