@@ -12,7 +12,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DataBaseHelper extends SQLiteOpenHelper {
 
 	// DataBase Name
-	private static final String DBNAME = "books";
+	private static final String DBNAME = "booklist";
 	
 	// DataBase Version
 	private static final int VERSION = 1;
@@ -63,7 +63,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		db.execSQL("DROP TABLE IF EXISTS books");
+		db.execSQL("DROP TABLE IF EXISTS " + Book.TABLE_NAME);
 		onCreate(db);
 	}
 }
