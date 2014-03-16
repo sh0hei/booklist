@@ -40,7 +40,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 			createSql.append(Book.COLUMN_AUTHOR_KANA + " text,");
 			createSql.append(Book.COLUMN_PUBLISHER_NAME + " text,");
 			createSql.append(Book.COLUMN_SIZE + " text,");
-			createSql.append(Book.COLUMN_ISBN + " text, unique, not null");
+			createSql.append(Book.COLUMN_ISBN + " text unique not null,");
 			createSql.append(Book.COLUMN_ITEM_CAPTION + " text,");
 			createSql.append(Book.COLUMN_SALES_DATE + " text,");
 			createSql.append(Book.COLUMN_ITEM_PRICE + " integer,");
@@ -53,6 +53,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 			createSql.append(")");
 			
 
+			StringBuilder createRates = new StringBuilder();
+			createRates.append("CREATE TABLE rates (");
+			createRates.append("  isbn text,");
+			createRates.append("  rate integer default 0");
+			createRates.append("  status integer default 0");
+			createRates.append(")");
+			
 			//db.execSQL(createSql.toString());
 			
 		} finally {
