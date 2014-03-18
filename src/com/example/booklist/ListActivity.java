@@ -3,6 +3,8 @@ package com.example.booklist;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.booklist.db.Book;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;

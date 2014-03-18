@@ -1,5 +1,7 @@
 package com.example.booklist;
 
+import com.example.booklist.db.Book;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
