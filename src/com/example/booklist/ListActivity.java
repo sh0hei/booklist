@@ -3,10 +3,10 @@ package com.example.booklist;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.booklist.db.Book;
-
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -15,7 +15,11 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.booklist.db.Book;
+import com.example.booklist.db.DataBaseHelper;
 
 /**
  * List Activity
@@ -27,6 +31,7 @@ public class ListActivity extends Activity {
 	private ListView listView;
 	private List<Book> bookList;
 	private ArrayAdapter<Book> arrayAdapter;
+	private DataBaseHelper dbHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +66,8 @@ public class ListActivity extends Activity {
 				int position, long id) {
 			// 今回は、トースト表示
 			ListView listView = (ListView) parent;
-			String title = (String) ((Book)listView.getItemAtPosition(position)).getTitle();
+			String title = (String) ((Book) listView
+					.getItemAtPosition(position)).getTitle();
 			Toast.makeText(ListActivity.this, "title: " + title,
 					Toast.LENGTH_SHORT).show();
 
@@ -101,20 +107,47 @@ public class ListActivity extends Activity {
 	 * 
 	 */
 	protected void addItems() {
-		bookList = new ArrayList<Book>();
-		bookList.add(new Book("エキスパート C プログラミング", "111", "sh0hei shimomura", "Fizz出版", 2800, "2013/03/10", "じゅげむじゅげむ"));
-		bookList.add(new Book("Effective Java 2nd Edition", "111", "sh0hei shimomura", "Buzz出版", 4200, "2013/04/12", "ごこうのすりきれ"));
-		bookList.add(new Book("いかにして問題を解くか", "111", "sh0hei shimomura", "Foo出版", 3200, "2012/12/30", "しょうひんせつめいぶん"));
-		bookList.add(new Book("プログラミングの心理学", "222", "sh0hei shimomura", "Bar出版", 3800, "2009/01/03", "わいんばーぐ"));
-		bookList.add(new Book("K&R 第2版", "333", "sh0hei shimomura", "Ascii出版", 2700, "1984/01/01", "ばいぶるばいぶる"));
-		bookList.add(new Book("デザインパターン徹底攻略", "444", "sh0hei shimomura", "でざぱた出版", 3300, "2002/04/23", "でざぱたー"));
-		bookList.add(new Book("計算機プログラムの構造と解釈", "444", "sh0hei shimomura", "MIT出版", 4800, "1992/01/30", "魔術師本！！"));
+
+		// queryメソッドでデータを取得
+		String[] cols = { Book.COLUMN_TITLE, Book.COLUMN_ISBN,
+				Book.COLUMN_AUTHOR, Book.COLUMN_PUBLISHER_NAME,
+				Book.COLUMN_ITEM_PRICE, Book.COLUMN_SALES_DATE,
+				Book.COLUMN_ITEM_CAPTION };
+		// String selection = "No = ?";
+		String selection = null;
+		// String[] selectionArgs = { "5" };
+		String[] selectionArgs = null;
+		String groupBy = null;
+		String having = null;
+		String orderBy = "_id desc";
+		dbHelper = new DataBaseHelper(this);
+		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		try {
+			bookList = new ArrayList<Book>();
+
+			Cursor cursor = db.query(Book.TABLE_NAME, cols, selection,
+					selectionArgs, groupBy, having, orderBy);
+
+			while (cursor.moveToNext()) {
+				bookList.add(new Book(cursor.getString(0), cursor.getString(1),
+						cursor.getString(2), cursor.getString(3), cursor
+								.getInt(4), cursor.getString(5), cursor
+								.getString(6)));
+
+			}
+		} finally {
+			db.close();
+			dbHelper.close();
+		}
+
 	}
 
 	/**
 	 * 
 	 */
 	protected void addItem() {
-		arrayAdapter.add(new Book("The Hacker Delight", "1400987234", "Sh0hei Shimomura", "いんぷれすじゃぱん", 2800, "2004/10/07", "はっかーのたのしみ"));
+		arrayAdapter.add(new Book("The Hacker Delight", "1400987234",
+				"Sh0hei Shimomura", "いんぷれすじゃぱん", 2800, "2004/10/07",
+				"はっかーのたのしみ"));
 	}
 }

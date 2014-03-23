@@ -371,4 +371,14 @@ public class Book implements Serializable {
 		this.largeImageUrl = largeImageUrl;
 	}
 
+	/*
+	 * (非 Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return title;
+	}
+
 }

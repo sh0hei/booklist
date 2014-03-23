@@ -71,7 +71,7 @@
                 android:id="@+id/book_author_label_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/skyblue "
+                android:background="@color/skyblue"
                 android:text="@string/author"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textStyle="bold" />
@@ -86,7 +86,7 @@
                 android:id="@+id/book_publisher_label_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/skyblue "
+                android:background="@color/skyblue"
                 android:text="@string/publisher"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textStyle="bold" />
@@ -101,7 +101,7 @@
                 android:id="@+id/book_price_label_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/skyblue "
+                android:background="@color/skyblue"
                 android:text="@string/price"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textStyle="bold" />
@@ -116,7 +116,7 @@
                 android:id="@+id/book_sales_date_label_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/skyblue "
+                android:background="@color/skyblue"
                 android:text="@string/sales_date"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textStyle="bold" />
@@ -131,7 +131,7 @@
                 android:id="@+id/book_caption_label_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/skyblue "
+                android:background="@color/skyblue"
                 android:text="@string/caption"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textStyle="bold" />

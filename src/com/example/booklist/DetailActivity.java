@@ -1,18 +1,30 @@
 package com.example.booklist;
 
-import com.example.booklist.db.Book;
-
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.ContentValues;
+import android.content.DialogInterface;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.example.booklist.db.Book;
+import com.example.booklist.db.DataBaseHelper;
+import com.example.booklist.db.Rate;
+
+//import android.support.v4.app.DialogFragment;
 
 public class DetailActivity extends Activity {
+
+	private DataBaseHelper dbHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -22,18 +34,54 @@ public class DetailActivity extends Activity {
 		Bundle extras = getIntent().getExtras();
 		Book book = (Book) extras.getSerializable("book");
 
+		setTitle(book.getTitle());
 		setBookInfo(book);
 
-		// スピナーのアイテムが選択された時に呼び出されるコールバックリスナーを登録します
-		Spinner spinner = (Spinner) this.findViewById(R.id.spinner1);
-		spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+		// ダイアログを表示する
+		DialogFragment newFragment = new FireMissilesDialogFragment();
+		newFragment.show(getFragmentManager(), "dialog");
+
+		ArrayAdapter<EnumRate> adapter = new ArrayAdapter<EnumRate>(this,
+				android.R.layout.simple_spinner_dropdown_item,
+				EnumRate.values());
+		Spinner spinnerRate = (Spinner) this.findViewById(R.id.spinner2);
+		spinnerRate.setAdapter(adapter);
+		spinnerRate.setOnItemSelectedListener(new OnItemSelectedListener() {
 			// Spinnerのドロップダウンアイテムが選択された時
 			public void onItemSelected(AdapterView<?> parent, View viw,
 					int arg2, long arg3) {
-				Spinner spinner = (Spinner) parent;
-				String item = (String) spinner.getSelectedItem();
-				Toast.makeText(DetailActivity.this, item, Toast.LENGTH_LONG)
-						.show();
+				// Spinner spinner = (Spinner) parent;
+				// EnumRate hoge = (EnumRate) spinner.getSelectedItem();
+				// Integer hogehoge = hoge.getId();
+				// String item = (String) spinner.getSelectedItem().toString();
+				// Toast.makeText(DetailActivity.this, hogehoge + " : " + item,
+				// Toast.LENGTH_SHORT).show();
+			}
+
+			// Spinnerのドロップダウンアイテムが選択されなかった時
+			public void onNothingSelected(AdapterView<?> parent) {
+			}
+		});
+
+		//
+		ArrayAdapter<EnumStatus> adapterStatus = new ArrayAdapter<EnumStatus>(
+				this, android.R.layout.simple_spinner_dropdown_item,
+				EnumStatus.values());
+		Spinner spinnerStatus = (Spinner) this.findViewById(R.id.spinner1);
+		spinnerStatus.setAdapter(adapterStatus);
+
+		// スピナーのアイテムが選択された時に呼び出されるコールバックリスナーを登録します
+
+		spinnerStatus.setOnItemSelectedListener(new OnItemSelectedListener() {
+			// Spinnerのドロップダウンアイテムが選択された時
+			public void onItemSelected(AdapterView<?> parent, View viw,
+					int arg2, long arg3) {
+				// Spinner spinner = (Spinner) parent;
+				// EnumStatus foo = (EnumStatus) spinner.getSelectedItem();
+				// Integer bar = foo.getId();
+				// String item = (String) spinner.getSelectedItem().toString();
+				// Toast.makeText(DetailActivity.this, bar + " : " + item,
+				// Toast.LENGTH_SHORT).show();
 			}
 
 			// Spinnerのドロップダウンアイテムが選択されなかった時
@@ -49,23 +97,84 @@ public class DetailActivity extends Activity {
 		return true;
 	}
 
+	public static class FireMissilesDialogFragment extends DialogFragment {
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			// Use the Builder class for convenient dialog construction
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			builder.setTitle(R.string.delete);
+			builder.setMessage(R.string.confirm_delete)
+					.setPositiveButton(R.string.delete,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int id) {
+									// FIRE ZE MISSILES!
+									DetailActivity activity = (DetailActivity) getActivity();
+									activity.deleteBook();
+								}
+							})
+					.setNegativeButton(R.string.cancel,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int id) {
+									// User cancelled the dialog
+								}
+							});
+			// Create the AlertDialog object and return it
+			return builder.create();
+		}
+	}
+
+	/**
+	 * ブックを削除します
+	 */
+	private void deleteBook() {
+	
+	}
+
+	/**
+	 * ユーザ設定ステータスを保存します
+	 */
+	private void setStatus(Book book, int status) {
+		ContentValues values = new ContentValues();
+
+		values.put(Rate.COLUMN_RATE, status);
+
+		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		try {
+			// insert
+		} finally {
+			db.close();
+			dbHelper.close();
+		}
+
+		db.insert(Book.TABLE_NAME, null, values);
+	}
+
+	/**
+	 * ユーザ設定レートを保存します
+	 */
+	private void setRate() {
+
+	}
+
 	private void setBookInfo(Book book) {
-		
+
 		TextView tv1 = (TextView) findViewById(R.id.book_title_text);
 		tv1.setText(book.getTitle());
-		
+
 		TextView tv2 = (TextView) findViewById(R.id.book_author_text);
 		tv2.setText(book.getAuthor());
-		
+
 		TextView tv3 = (TextView) findViewById(R.id.book_publisher_text);
 		tv3.setText(book.getPublisherName());
-		
+
 		TextView tv4 = (TextView) findViewById(R.id.book_price_text);
 		tv4.setText(book.getItemPrice().toString());
-		
+
 		TextView tv5 = (TextView) findViewById(R.id.book_sales_date_text);
 		tv5.setText(book.getSalesDate());
-		
+
 		TextView tv6 = (TextView) findViewById(R.id.book_caption_text);
 		tv6.setText(book.getItemCaption());
 	}
