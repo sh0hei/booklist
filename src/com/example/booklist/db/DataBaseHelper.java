@@ -47,10 +47,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		db.beginTransaction();
 
 		try {
-
-			db.execSQL("DROP TABLE IF EXISTS " + Book.TABLE_NAME);
-			db.execSQL("DROP TABLE IF EXISTS " + Rate.TABLE_NAME);
-
 			StringBuilder createBooks = new StringBuilder();
 			createBooks.append("CREATE TABLE " + Book.TABLE_NAME + " (");
 			createBooks.append(Book.COLUMN_ID
@@ -89,6 +85,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 			db.execSQL(createRates.toString());
 
 			// サンプルデータの投入
+			
+			/*
 			for (String[] data : testDatas) {
 				ContentValues values = new ContentValues();
 				values.put(Book.COLUMN_TITLE, data[0]);
@@ -113,6 +111,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 				db.insert(Book.TABLE_NAME, null, values);
 
 			}
+			*/
 
 			db.setTransactionSuccessful();
 

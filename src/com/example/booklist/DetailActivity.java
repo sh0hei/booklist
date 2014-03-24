@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
@@ -25,6 +26,10 @@ import com.example.booklist.db.Rate;
 public class DetailActivity extends Activity {
 
 	private DataBaseHelper dbHelper;
+	
+	private Book book;
+	
+	private Rate rate;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +37,7 @@ public class DetailActivity extends Activity {
 		setContentView(R.layout.activity_detail);
 
 		Bundle extras = getIntent().getExtras();
-		Book book = (Book) extras.getSerializable("book");
+		book = (Book) extras.getSerializable("book");
 
 		setTitle(book.getTitle());
 		setBookInfo(book);
@@ -41,18 +46,21 @@ public class DetailActivity extends Activity {
 		DialogFragment newFragment = new FireMissilesDialogFragment();
 		newFragment.show(getFragmentManager(), "dialog");
 
-		ArrayAdapter<EnumRate> adapter = new ArrayAdapter<EnumRate>(this,
-				android.R.layout.simple_spinner_dropdown_item,
-				EnumRate.values());
+		ArrayAdapter<EnumRate> adapter = new ArrayAdapter<EnumRate>(this, android.R.layout.simple_spinner_dropdown_item, EnumRate.values());
 		Spinner spinnerRate = (Spinner) this.findViewById(R.id.spinner2);
 		spinnerRate.setAdapter(adapter);
+		
+		// TODO:
+		// spinnerRate.setSelection();
+		
 		spinnerRate.setOnItemSelectedListener(new OnItemSelectedListener() {
 			// Spinnerのドロップダウンアイテムが選択された時
-			public void onItemSelected(AdapterView<?> parent, View viw,
-					int arg2, long arg3) {
-				// Spinner spinner = (Spinner) parent;
-				// EnumRate hoge = (EnumRate) spinner.getSelectedItem();
-				// Integer hogehoge = hoge.getId();
+			public void onItemSelected(AdapterView<?> parent, View viw, int arg2, long arg3) {
+				Spinner spinner = (Spinner) parent;
+				EnumRate hoge = (EnumRate) spinner.getSelectedItem();
+				Integer rate = hoge.getId();
+				
+				setRate(book, rate.intValue());
 				// String item = (String) spinner.getSelectedItem().toString();
 				// Toast.makeText(DetailActivity.this, hogehoge + " : " + item,
 				// Toast.LENGTH_SHORT).show();
@@ -64,9 +72,7 @@ public class DetailActivity extends Activity {
 		});
 
 		//
-		ArrayAdapter<EnumStatus> adapterStatus = new ArrayAdapter<EnumStatus>(
-				this, android.R.layout.simple_spinner_dropdown_item,
-				EnumStatus.values());
+		ArrayAdapter<EnumStatus> adapterStatus = new ArrayAdapter<EnumStatus>(this, android.R.layout.simple_spinner_dropdown_item, EnumStatus.values());
 		Spinner spinnerStatus = (Spinner) this.findViewById(R.id.spinner1);
 		spinnerStatus.setAdapter(adapterStatus);
 
@@ -74,12 +80,14 @@ public class DetailActivity extends Activity {
 
 		spinnerStatus.setOnItemSelectedListener(new OnItemSelectedListener() {
 			// Spinnerのドロップダウンアイテムが選択された時
-			public void onItemSelected(AdapterView<?> parent, View viw,
-					int arg2, long arg3) {
-				// Spinner spinner = (Spinner) parent;
-				// EnumStatus foo = (EnumStatus) spinner.getSelectedItem();
-				// Integer bar = foo.getId();
-				// String item = (String) spinner.getSelectedItem().toString();
+			public void onItemSelected(AdapterView<?> parent, View viw, int arg2, long arg3) {
+				
+				Spinner spinner = (Spinner) parent;
+				EnumStatus foo = (EnumStatus) spinner.getSelectedItem();
+				Integer status = foo.getId();
+				
+				setStatus(book, status.intValue());
+				//String item = (String) spinner.getSelectedItem().toString();
 				// Toast.makeText(DetailActivity.this, bar + " : " + item,
 				// Toast.LENGTH_SHORT).show();
 			}
@@ -132,32 +140,92 @@ public class DetailActivity extends Activity {
 	
 	}
 
+	private void getRate() {
+
+		// queryメソッドでデータを取得
+		String[] cols = {Rate.COLUMN_ID, Rate.COLUMN_ISBN, Rate.COLUMN_RATE, Rate.COLUMN_STATUS};
+		String selection = Rate.COLUMN_ISBN + " = ?";
+		String[] selectionArgs = { book.getIsbn() };
+
+		String groupBy = null;
+		String having = null;
+		String orderBy = null;
+		dbHelper = new DataBaseHelper(this);
+		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		try {
+			Cursor cursor = db.query(Rate.TABLE_NAME, cols, selection, selectionArgs, groupBy, having, orderBy);
+
+			// TODO:
+			/*
+			while (cursor.moveToNext()) {
+				
+				switch (cursor.getInt(0)) {
+				case EnumRate. :
+					
+					break;
+
+				default:
+					break;
+				}
+				rate.setRate(cursor.getInt(0));
+				rate.setStatus(cursor.getInt(1));
+			}
+			*/
+		} finally {
+			db.close();
+			dbHelper.close();
+		}
+	}
+	
 	/**
 	 * ユーザ設定ステータスを保存します
 	 */
 	private void setStatus(Book book, int status) {
 		ContentValues values = new ContentValues();
 
-		values.put(Rate.COLUMN_RATE, status);
+		values.put(Rate.COLUMN_ISBN, book.getIsbn());
+		values.put(Rate.COLUMN_STATUS, status);
 
+		dbHelper = new DataBaseHelper(this);
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		db.beginTransaction();
 		try {
-			// insert
+			db.insertWithOnConflict(Rate.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+			db.setTransactionSuccessful();
 		} finally {
+			db.endTransaction();
 			db.close();
 			dbHelper.close();
 		}
-
-		db.insert(Book.TABLE_NAME, null, values);
 	}
 
 	/**
 	 * ユーザ設定レートを保存します
 	 */
-	private void setRate() {
+	private void setRate(Book book, int rate) {
+		ContentValues values = new ContentValues();
 
+		values.put(Rate.COLUMN_ISBN, book.getIsbn());
+		values.put(Rate.COLUMN_RATE, rate);
+
+		dbHelper = new DataBaseHelper(this);
+		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		db.beginTransaction();
+		try {
+			db.insertWithOnConflict(Rate.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+			db.setTransactionSuccessful();
+		} finally {
+			db.endTransaction();
+			db.close();
+			dbHelper.close();
+		}
 	}
 
+	/**
+	 * ブック情報を設定します
+	 * 
+	 * @param book
+	 */
 	private void setBookInfo(Book book) {
 
 		TextView tv1 = (TextView) findViewById(R.id.book_title_text);
