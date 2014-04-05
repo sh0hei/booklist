@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="not_specified">指定なし</string>
+    <string name="single_star">☆</string>
+    <string name="double_star">☆☆</string>
+    <string name="triple_star">☆☆☆</string>
+    <string name="quadruple_star">☆☆☆☆</string>
+    <string name="quintuple_star">☆☆☆☆☆</string>
+
+</resources>

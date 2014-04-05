@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 /**
  * DataBase Helper Class
@@ -20,7 +19,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	private static final int VERSION = 1;
 
 	// Test Data
-	private String[][] testDatas = new String[][] {
+	private String[][] testBooks = new String[][] {
 			{ "たいとる１", "タイトル", "さぶたいとる", "サブタイトルカナ", "シリーズ", "シリーズカナ", "著者",
 					"チョシャ", "出版社", "文庫", "478992381", "説明文", "2012/12/12",
 					"700", "http://www.google.com", "small.google.com",
@@ -37,6 +36,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 					"チョシャ", "出版社", "文庫", "478992384", "説明文", "2012/12/12",
 					"700", "http://www.google.com", "small.google.com",
 					"medium.google.com", "large.google.com" } };
+
+	private String[][] testRates = new String[][] { { "478992381", "0", "0" },
+			{ "478992382", "0", "0" }, { "478992383", "0", "0" },
+			{ "478992384", "0", "0" } };
 
 	public DataBaseHelper(Context context) {
 		super(context, DBNAME, null, VERSION);
@@ -85,9 +88,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 			db.execSQL(createRates.toString());
 
 			// サンプルデータの投入
-			
-			/*
-			for (String[] data : testDatas) {
+
+			for (String[] data : testBooks) {
 				ContentValues values = new ContentValues();
 				values.put(Book.COLUMN_TITLE, data[0]);
 				values.put(Book.COLUMN_TITLE_KANA, data[1]);
@@ -111,7 +113,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 				db.insert(Book.TABLE_NAME, null, values);
 
 			}
-			*/
+
+			for (String[] rate : testRates) {
+				ContentValues values = new ContentValues();
+				values.put(Rate.COLUMN_ISBN, rate[0]);
+				values.put(Rate.COLUMN_STATUS, rate[1]);
+				values.put(Rate.COLUMN_RATE, rate[2]);
+
+				db.insert(Rate.TABLE_NAME, null, values);
+			}
 
 			db.setTransactionSuccessful();
 
